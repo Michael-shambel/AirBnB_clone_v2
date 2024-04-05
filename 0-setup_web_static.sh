@@ -17,7 +17,7 @@ mkdir -p /data/web_static/releases/test/
 # Create a fake HTML file /data/web_static/releases/test/index.html (with simple content, to test your Nginx configuration)
 echo "test MY Nginx configuration" > /data/web_static/releases/test/index.html
 # If the symbolic link already exists, it should be deleted and recreated every time the script is ran.
-ln -sf /data/web_static/current /data/web_static/releases/test/
+ln -sfn /data/web_static/current /data/web_static/releases/test/
 
 
 chown -R ubuntu:ubuntu /data/
