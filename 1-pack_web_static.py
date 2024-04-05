@@ -13,7 +13,7 @@ def do_pack():
     """
     local("mkdir -p versions")
     time = datetime.now()
-    archive = "web_static_{}.gtz".format(time.strftime("%Y%m%d%H%M%S"))
+    archive = "web_static_{}.tgz".format(time.strftime("%Y%m%d%H%M%S"))
     result = local("tar -czvf versions/{} web_static".format(archive))
     if result is None:
         return None
