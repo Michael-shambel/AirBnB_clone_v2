@@ -6,10 +6,24 @@ the function do_deploy
 """
 from fabric.api import *
 from os.path import exists
+from datetime import datetime
 
 
 env.hosts = ['100.25.34.19', '100.27.2.0']
 
+
+def do_pack():
+    """
+    All files in the folder web_static must be added to the final archive
+    """
+    local("mkdir -p versions")
+    time = datetime.now()
+    archive_path = "web_static_{}.tgz".format(time.strftime("%Y%m%d%H%M%S"))
+    result = local("tar -czvf versions/{} web_static".format(archive_path))
+    if result is None:
+        return None
+    else:
+        return archive_path
 
 def do_deploy(archive_path):
     """
@@ -27,7 +41,7 @@ def do_deploy(archive_path):
         run('tar -xzf /tmp/{} -C /data/web_static/releases/{}/'.format(
             name, no_ext))
         run('rm /tmp/{}'.format(name))
-        run('mv /data/web_static/releases/{}/web_static/* '
+        run('rsync -av /data/web_static/releases/{}/web_static/ '
             '/data/web_static/releases/{}/'.format(no_ext, no_ext))
         run('rm -rf /data/web_static/releases/{}/web_static'.format(no_ext))
         run('rm -rf /data/web_static/current')
