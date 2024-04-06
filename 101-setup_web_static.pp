@@ -5,6 +5,13 @@ package { 'nginx':
   ensure => installed,
 }
 
+# Create necessary directories if they don't exist
+file { '/data':
+  ensure => directory,
+  owner  => 'ubuntu',
+  group  => 'ubuntu',
+  mode   => '0755',
+}
 
 file { '/data/web_static':
   ensure => directory,
@@ -48,6 +55,10 @@ file { '/data':
 }
 
 # Modify Nginx configuration
+file { '/etc/nginx/sites-available/default':
+  ensure => file,
+}
+
 file_line { 'nginx_hbnb_static_location':
   path    => '/etc/nginx/sites-available/default',
   line    => '  location /hbnb_static/ {',
@@ -67,5 +78,6 @@ file_line { 'nginx_alias_config':
 service { 'nginx':
   ensure  => running,
   enable  => true,
+  require => File['/etc/nginx/sites-available/default'],
 }
 
