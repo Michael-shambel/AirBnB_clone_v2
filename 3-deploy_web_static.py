@@ -16,6 +16,8 @@ def do_pack():
     All files in the folder web_static must be added to the final archive
     """
     local("mkdir -p versions")
+    local("mkdir -p web_static")
+    local("echo '<html><head></head><body>Hello World!</body></html>' > web_static/my_index.html")
     time = datetime.now()
     archive_path = "web_static_{}.tgz".format(time.strftime("%Y%m%d%H%M%S"))
     result = local("tar -czvf versions/{} web_static".format(archive_path))
