@@ -9,7 +9,6 @@ from os.path import exists
 
 env.hosts = ['100.25.34.19', '100.27.2.0']
 env.user = 'ubuntu'
-#env.ssh_key = '~/.ssh/isa_rsa'
 
 
 def do_pack():
