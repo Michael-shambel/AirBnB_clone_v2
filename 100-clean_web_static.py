@@ -7,8 +7,8 @@ from fabric.api import *
 from os.path import exists
 
 env.hosts = ['<IP web-01>', '<IP web-02>']
-env.user = 'ubuntu'  # or any other user you are using to connect to the servers
-env.key_filename = 'my_ssh_private_key'  # path to your private SSH key
+env.user = 'ubuntu'
+
 
 def do_clean(number=0):
     """
@@ -25,9 +25,9 @@ def do_clean(number=0):
         return
 
     # Delete unnecessary archives in versions folder
-    local("ls -t versions | tail -n +{} | xargs -I {{}} rm versions/{{}}".format(number + 1))
+    local("ls -t versions | tail -n +{} | xargs -I {{}} rm versions/{{}}"
+          .format(number + 1))
 
-    # Delete unnecessary archives in /data/web_static/releases folder on each server
     for host in env.hosts:
         with settings(host_string=host):
             releases = run("ls -t /data/web_static/releases/")
@@ -36,5 +36,3 @@ def do_clean(number=0):
                 to_delete = releases_list[number:]
                 for archive in to_delete:
                     run("rm -rf /data/web_static/releases/{}".format(archive))
-
-
