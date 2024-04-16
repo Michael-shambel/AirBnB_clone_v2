@@ -4,13 +4,7 @@
 sudo apt-get -y update
 sudo apt-get -y upgrade
 sudo apt-get install -y nginx
-#Create the folder /data/ if it doesn’t already exist
-mkdir -p /data/
-#Create the folder /data/web_static/ if it doesn’t already exist
-mkdir -p /data/web_static/
-# Create the folder /data/web_static/releases/ if it doesn’t already exist
-mkdir -p /data/web_static/releases/
-#Create the folder /data/web_static/shared/ if it doesn’t already exist
+
 mkdir -p /data/web_static/shared/
 # Create the folder /data/web_static/releases/test/ if it doesn’t already exist
 mkdir -p /data/web_static/releases/test/
