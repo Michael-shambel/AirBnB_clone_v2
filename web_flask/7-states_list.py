@@ -2,8 +2,10 @@
 """
 script that starts a Flask web application
 """
-from flask import Flask
+from flask import Flask, render_template
 from model import storage
+from models.state import state
+from sqlalchemy.orm import sessionmaker, scoped_session
 app = Flask(__name__)
 
 
