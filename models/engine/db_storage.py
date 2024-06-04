@@ -59,26 +59,6 @@ class DBStorage:
         if obj is not None:
             self.__session.delete(obj)
 
-    def all(self, cls=None):
-        """Query all objects from the database session."""
-        objects = {}
-
-        if cls is not None:
-            query = self.__session.query(cls).all()
-            for obj in query:
-                key = "{}.{}".format(obj.__class__.__name__, obj.id)
-                objects[key] = obj
-        else:
-            # Assuming these are your model classes
-            classes = [User, State, City, Amenity, Place, Review]
-            for cls in classes:
-                query = self.__session.query(cls).all()
-                for obj in query:
-                    key = "{}.{}".format(obj.__class__.__name__, obj.id)
-                    objects[key] = obj
-
-        return objects
-
     def reload(self):
         """Create all tables in the database and initialize a new session."""
         Base.metadata.create_all(self.__engine)
