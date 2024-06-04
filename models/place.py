@@ -18,3 +18,13 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, default=0, nullable=False)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
+    reviews = relationship("Review", backref="place", cascade="all, delete")
+
+    @property
+    def reviews(self):
+        """etter attribute reviews that returns the list of Review"""
+        if models.storage_t == 'db':
+            return self.reviews
+        else:
+            return [review for review in models.storage.all(Review).values()
+                    if review.place_id == self.id]
