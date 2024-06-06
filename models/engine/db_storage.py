@@ -30,9 +30,32 @@ class DBStorage:
 
     def all(self, cls=None):
         """Query all objects from the database session."""
-        objects = {}
+        objects = []
 
-        if cls is not None:
+        if cls:
+            if isinstance(cls, str):
+                try:
+                    cls = globals()[cls]
+                except KeyError:
+                    pass
+            if issubclass(cls, Base):
+                objects = self.__session.query(cls).all()
+        else:
+            for subclass in Base.__subclasses__():
+                objects.extend(self.__session.query(subclass).all())
+        obj_dict = {}
+        for obj in objects:
+            key = "{}.{}".format(obj.__class__.__name__, obj.id)
+            try:
+                if obj.__class__.__name__ == 'State':
+                    del obj._sa_instance_state
+                    obj_dict[key] = obj
+                else:
+                    obj_dict[key] = obj
+            except Exception:
+                pass
+        return obj_dict
+        """if cls is not None:
             query = self.__session.query(cls).all()
             for obj in query:
                 key = "{}.{}".format(obj.__class__.__name__, obj.id)
@@ -44,7 +67,7 @@ class DBStorage:
                 for obj in query:
                     key = "{}.{}".format(obj.__class__.__name__, obj.id)
                     objects[key] = obj
-        return objects
+        return objects"""
 
     def new(self, obj):
         """ add the object to the current database session """
@@ -56,8 +79,7 @@ class DBStorage:
 
     def delete(self, obj=None):
         """ Delete obj from session """
-        if obj is not None:
-            self.__session.delete(obj)
+        self.__session.delete(obj)
 
     def reload(self):
         """Create all tables in the database and initialize a new session."""
