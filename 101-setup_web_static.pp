@@ -1,16 +1,18 @@
-# 101-setup_web_static.pp
-
-# Install Nginx package
+# Ensure Nginx is installed
 package { 'nginx':
   ensure => installed,
 }
 
-# Create necessary directories if they don't exist
+# Ensure Nginx service is running
+service { 'nginx':
+  ensure  => running,
+  enable  => true,
+  require => Package['nginx'],
+}
+
+# Create web_static directory structure
 file { '/data':
   ensure => directory,
-  owner  => 'ubuntu',
-  group  => 'ubuntu',
-  mode   => '0755',
 }
 
 file { '/data/web_static':
@@ -31,53 +33,19 @@ file { '/data/web_static/releases/test':
 
 # Create index.html file
 file { '/data/web_static/releases/test/index.html':
-  ensure  => file,
+  ensure  => present,
   content => '<html>
-  <head>
-  </head>
-  <body>
-    Holberton School
-  </body>
-</html>',
+    <head>
+    </head>
+    <body>
+      Holberton School
+    </body>
+  </html>',
 }
 
-# Create symbolic link
+# Create symbolic link to current release
 file { '/data/web_static/current':
   ensure => link,
   target => '/data/web_static/releases/test',
-}
-
-# Change ownership
-file { '/data':
-  owner   => 'ubuntu',
-  group   => 'ubuntu',
-  recurse => true,
-}
-
-# Modify Nginx configuration
-file { '/etc/nginx/sites-available/default':
-  ensure => file,
-}
-
-file_line { 'nginx_hbnb_static_location':
-  path    => '/etc/nginx/sites-available/default',
-  line    => '  location /hbnb_static/ {',
-  match   => '^.*root.*;$',
-  after   => '^.*root.*;$',
-  notify  => Service['nginx'],
-}
-
-file_line { 'nginx_alias_config':
-  path    => '/etc/nginx/sites-available/default',
-  line    => '        alias /data/web_static/current/;',
-  match   => '^\s*location /hbnb_static/ {$',
-  notify  => Service['nginx'],
-}
-
-# Restart Nginx service
-service { 'nginx':
-  ensure  => running,
-  enable  => true,
-  require => File['/etc/nginx/sites-available/default'],
 }
 
