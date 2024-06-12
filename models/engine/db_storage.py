@@ -8,7 +8,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-from sqlalchemy import create_engine
+from sqlalchemy import Column, String, ForeignKey, create_engine
 from sqlalchemy.orm import relationship, scoped_session, sessionmaker
 
 
