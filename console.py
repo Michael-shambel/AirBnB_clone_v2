@@ -129,7 +129,27 @@ class HBNBCommand(cmd.Cmd):
         # Creating new instance with the class name inputed
         new_instance = HBNBCommand.classes[class_name]()
         # Looping through the rest of the arguments args[1:]
-        for p in args[1:]:
+        for arg in args[1:]:
+            try:
+                key, value = arg.split('=', 1)
+            except ValueError:
+                print(f"** invalid argument format: {arg} **")
+                continue
+            if value.startswith('"') and value.endswith('"'):
+                value = value[1:-1].replace('_', ' ')
+            else:
+                try:
+                    if '.' in value:
+                        value = float(value)
+                    else:
+                        value = int(value)
+                except ValueError:
+                    print(f"** invalid value for {key}: {value} **")
+                    continue
+            setattr(new_instance, key, value)
+        new_instance.save()
+        print(new_instance.id)
+            """
             # Split arg with '=' to key value Ex:(city_id="0001")
             [key, value] = p.split('=')
             # if string "" replace _ with space
@@ -146,7 +166,7 @@ class HBNBCommand(cmd.Cmd):
         # saving to the file with .save()
         new_instance.save()
         # Printing the id as per example on the intraned
-        print(new_instance.id)
+        print(new_instance.id)"""
 
     def help_create(self):
         """ Help information for the create method """
